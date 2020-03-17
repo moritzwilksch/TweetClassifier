@@ -42,6 +42,6 @@ if __name__ == "TweetClassifier.app":
     app.debug = True
     # Loading Model and Pipeline and Vectorizer
     pl = create_pipeline()
-    vectorizer = pickle.load(open("vectorizer.pickle", "rb"))
-    model = keras.models.load_model("classifierNeuralNet.hd5")
+    vectorizer = pickle.load(open("models/vectorizer.pickle", "rb"))
+    model = keras.models.load_model("models/classifierNeuralNet.hd5")
     app.run()
