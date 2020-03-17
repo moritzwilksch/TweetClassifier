@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Tweet Classifier</title>
+</head>
+
+<body>
+
+    <h1>Tweet Classifier</h1>
+    <p>Given a tweet (text), predicts who is more likely to be the author: Obama or Trump</p>
+
+    <form action="/predict" method="POST">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Tweet</span>
+            </div>
+            <input name="text" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default">
+        </div>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+
+    <h4 class="display-4">Predicted Author: <span class="badge badge-dark">{{prediction}}</span></h4>
+
+</body>
+
+</html>

@@ -5,16 +5,13 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.pipeline import Pipeline
-from nltk import PorterStemmer
-from nltk.corpus import stopwords
-import string
-import re
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from preprocessingPL import create_pipeline
 
 # %%
 raw_obama = pd.read_pickle("data/tweets_obama.pickle")
@@ -29,54 +26,7 @@ df = pd.concat([df_obama, df_trump]).reset_index().drop("index", axis=1)
 df["author"] = df.author.astype("category")
 
 # %%
-
-
-def start_pipeline(df):
-    """ Creates copy of df to prevent side effects. """
-    return df.copy()
-
-
-def remove_link(df):
-    link = re.compile(" http.*$")
-    df["text"] = df.text.apply(lambda s: re.sub(link, "", s))
-    return df
-
-
-def remove_mentions(df):
-    mention = re.compile("@\w*")
-    df["text"] = df.text.apply(lambda s: re.sub(mention, "", s))
-    return df
-
-
-def remove_punctuation(df):
-    df["text"] = df.text.apply(lambda s: "".join(
-        [char for char in s if char not in string.punctuation]).lower())
-    return df
-
-
-def remove_stopwords(df):
-    stopwords_en = stopwords.words("english")
-    df["text"] = df.text.apply(lambda s: " ".join(
-        [word for word in s.split() if word not in stopwords_en]))
-    return df
-
-
-def stem_words(df):
-    stemmer = PorterStemmer()
-    df["text"] = df.text.apply(lambda s: stemmer.stem(s))
-    return df
-
-
-# %%
-
-cleaning_pipeline = Pipeline([
-    ("Start", FunctionTransformer(start_pipeline)),
-    ("Remove links", FunctionTransformer(remove_link)),
-    ("Remove mentions", FunctionTransformer(remove_mentions)),
-    ("Remove punctuation", FunctionTransformer(remove_punctuation)),
-    ("Stem words", FunctionTransformer(stem_words)),
-    ("Remove stopwords", FunctionTransformer(remove_stopwords)),
-])
+cleaning_pipeline = create_pipeline()
 
 # %%
 df = cleaning_pipeline.fit_transform(df)
@@ -136,7 +86,7 @@ neural_net = keras.models.Sequential([
 ])
 
 neural_net.compile(optimizer="adam", loss="binary_crossentropy")
-N_EPOCHS = 30
+N_EPOCHS = 1#30
 neural_net.fit(x=xtrain, y=ytrain, epochs=N_EPOCHS, batch_size=64, validation_data=(xtest, ytest))
 
 # %%
@@ -168,7 +118,7 @@ emb_model = keras.Model(inputs=emb_input, outputs=final_layer)
 
 # Compile and fit
 emb_model.compile(optimizer="adam", loss="binary_crossentropy")
-N_EPOCHS = 50
+N_EPOCHS = 1#50
 emb_model.fit(x=xtrain_emb, y=ytrain, epochs=N_EPOCHS, batch_size=64, validation_data=(xtest_emb, ytest)) #validation_data=([xtest], [ytest]))
 
 # %%
