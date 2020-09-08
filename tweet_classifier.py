@@ -41,7 +41,7 @@ xtrain_raw, xtest_raw, ytrain, ytest = train_test_split(
 vectorizer = CountVectorizer()
 vectorizer.fit(xtrain_raw)
 
-# Transform tweets two vectors
+# Transform tweets to vectors
 _vocab_size = len(vectorizer.vocabulary_)
 xtrain = vectorizer.transform(xtrain_raw)
 xtest = vectorizer.transform(xtest_raw)
@@ -85,8 +85,16 @@ neural_net = keras.models.Sequential([
     keras.layers.Dense(units=1, activation="sigmoid")
 ])
 
-neural_net.compile(optimizer="adam", loss="binary_crossentropy")
-N_EPOCHS = 1#30
+neural_net.compile(optimizer=keras.optimizers.Adam(lr=10**-2), loss="binary_crossentropy")
+
+from lr_finder import LRFinder
+lrf = LRFinder(0.0001, 1)
+neural_net.fit(x=xtrain, y=ytrain, epochs=2, batch_size=64, validation_data=(xtest, ytest), callbacks=[lrf])
+
+#%%
+from clrcallback import CyclicLR
+
+N_EPOCHS = 10
 neural_net.fit(x=xtrain, y=ytrain, epochs=N_EPOCHS, batch_size=64, validation_data=(xtest, ytest))
 
 # %%
