@@ -5,7 +5,7 @@ Runs as flask app: Offers simple one-page input field with submit button to make
 
 ## Technicals
 The underlying model is a shallow neural net with a vocabulary size of 6471. There is only one densly connected layer with 10 neurons.
-The input is a bag-of-word matrix createt from only the training data.
+The input is a bag-of-word matrix created from only the training data.
 
 
 ## Performance
